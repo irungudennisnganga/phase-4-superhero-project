@@ -10,21 +10,14 @@ function Hero() {
   const { id } = useParams();
 
   useEffect(() => {
-    fetch(`/heroes/${id}`).then((r) => {
-      if (r.ok) {
-        r.json().then((hero) =>
-          setHero({ data: hero, error: null, status: "resolved" })
-        );
-      } else {
-        r.json().then((err) =>
-          setHero({ data: null, error: err.error, status: "rejected" })
-        );
-      }
-    });
+    fetch(`/heroes/${id}`)
+      .then((r) => r.json())
+      .then((hero) => setHero({ data: hero, error: null, status: "resolved" }))
+      .catch((err) => setHero({ data: null, error: err.message, status: "rejected" }));
   }, [id]);
-
+  // console.log(hero)
   if (status === "pending") return <h1>Loading...</h1>;
-  if (status === "rejected") return <h1>Error: {error.error}</h1>;
+  if (status === "rejected") return <h1>Error: {error}</h1>;
 
   return (
     <section>
@@ -33,12 +26,16 @@ function Hero() {
 
       <h3>Powers:</h3>
       <ul>
-        {hero.powers.map((power) => (
-          <li key={hero.id}>
-            <Link to={`/powers/${power.id}`}>{power.name}</Link>
-          </li>
-        ))}
-      </ul>
+        {
+          hero.heropowers.map((power) => (
+            <li key={power.id}>
+              <Link to={`/powers/${power.id}`}>{power.power.name}</Link>
+            </li>
+          ))}
+         
+      {/* //     <li>No powers listed.</li> */}
+        
+       </ul>
 
       <Link to="/hero_powers/new">Add Hero Power</Link>
     </section>

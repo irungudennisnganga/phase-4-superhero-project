@@ -8,7 +8,7 @@ function PowerEditForm() {
     status: "pending",
   });
   const [description, setDescription] = useState("");
-  const history = useNavigate();
+  const navigate = useNavigate();
   const { id } = useParams();
 
   useEffect(() => {
@@ -40,7 +40,7 @@ function PowerEditForm() {
       }),
     }).then((r) => {
       if (r.ok) {
-        history.push(`/powers/${power.id}`);
+        navigate(`/powers/${power.id}`);
       } else {
         r.json().then((err) =>
           setPower({ data: power, errors: err.errors, status: "rejected" })

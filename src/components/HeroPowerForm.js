@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router";
+import { useNavigate } from "react-router-dom";
 
 function HeroPowerForm() {
   const [heroes, setHeroes] = useState([]);
@@ -8,7 +8,7 @@ function HeroPowerForm() {
   const [powerId, setPowerId] = useState("");
   const [strength, setStrength] = useState("");
   const [formErrors, setFormErrors] = useState([]);
-  const history = useNavigate();
+  const navigate = useNavigate(); // Correct import for navigation
 
   useEffect(() => {
     fetch("/heroes")
@@ -29,19 +29,22 @@ function HeroPowerForm() {
       power_id: powerId,
       strength,
     };
+
     fetch("/hero_powers", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(formData),
-    }).then((r) => {
-      if (r.ok) {
-        history.push(`/heroes/${heroId}`);
-      } else {
-        r.json().then((err) => setFormErrors(err.errors));
-      }
-    });
+    })
+      .then((r) => {
+        if (r.ok) {
+          navigate(`/heroes/${heroId}`)
+          // history.push(); // Use history.push for navigation
+        } else {
+          r.json().then((err) => setFormErrors(err.errors));
+        }
+      });
   }
 
   return (
@@ -82,13 +85,13 @@ function HeroPowerForm() {
         value={strength}
         onChange={(e) => setStrength(e.target.value)}
       />
-      {formErrors.length > 0
-        ? formErrors.map((err) => (
-            <p key={err} style={{ color: "red" }}>
-              {err}
-            </p>
-          ))
-        : null}
+      {formErrors.length > 0 ? (
+        <ul style={{ color: "red" }}>
+          {formErrors.map((err) => (
+            <li key={err}>{err}</li>
+          ))}
+        </ul>
+      ) : null}
       <button type="submit">Add Hero Power</button>
     </form>
   );
