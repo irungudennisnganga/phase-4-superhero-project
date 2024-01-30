@@ -53,21 +53,27 @@ class PowerData(Resource):
   
     
 api.add_resource(PowerData, '/powers')
-# class HeroPowerMethod(Resource):
- 
-# api.add_resource(HeroPowerMethod, '/heropowers')
+
 
 class PowerById(Resource):
+    
     def get(self,id):
-        data = Power.query.filter_by(id=id).first().to_dict()
-
-        response_data=data
-        
-        response=make_response(
-            jsonify(data),
+        power = Power.query.get(id)
+        if not power:
+            return jsonify({'error': 'Power not found'}), 404
+        return make_response(
+            jsonify({'id': power.id, 'name': power.name, 'description': power.description}),
             200
         )
-        return response
+        # data = Power.query.filter_by(id=id).first().to_dict()
+
+       
+        
+        # response=make_response(
+        #     jsonify(data),
+        #     200
+        # )
+        # return response
     
     def patch(self,id):
         data=Power.query.filter_by(id=id).first()

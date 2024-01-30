@@ -29,7 +29,7 @@ function Hero() {
         {
           hero.heropowers.map((power) => (
             <li key={power.id}>
-              <Link to={`/powers/${power.id}`}>{power.power.name}</Link>
+              <Link to={`/powers/${power.power.id}`}>{power.power.name}</Link>
             </li>
           ))}
          

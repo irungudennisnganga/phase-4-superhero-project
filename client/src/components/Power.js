@@ -17,14 +17,14 @@ function Power() {
         );
       } else {
         r.json().then((err) =>
-          setPower({ data: null, error: err.error, status: "rejected" })
+          setPower({ data: power, error: err.error, status: "rejected" })
         );
       }
     });
   }, [id]);
 
   if (status === "pending") return <h1>Loading...</h1>;
-  if (status === "rejected") return <h1>Error: {error.error}</h1>;
+  if (status === "rejected") return <h1>Error:INVALID ID </h1>;
 
   return (
     <section>

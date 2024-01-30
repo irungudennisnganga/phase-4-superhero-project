@@ -89,6 +89,7 @@ function HeroPowerForm() {
         <ul style={{ color: "red" }}>
           {formErrors.map((err) => (
             <li key={err}>{err}</li>
+            
           ))}
         </ul>
       ) : null}
