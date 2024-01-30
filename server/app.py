@@ -31,6 +31,7 @@ api.add_resource(HeroData, '/heroes')
 class HeroById(Resource):
     def get(self,id):
         data = Hero.query.filter_by(id=id).first()
+        
         response_dict=data.to_dict()
         
         response=make_response(
@@ -58,22 +59,12 @@ api.add_resource(PowerData, '/powers')
 class PowerById(Resource):
     
     def get(self,id):
-        power = Power.query.get(id)
-        if not power:
-            return jsonify({'error': 'Power not found'}), 404
-        return make_response(
-            jsonify({'id': power.id, 'name': power.name, 'description': power.description}),
+        data = Power.query.filter_by(id=id).first().to_dict()
+        response=make_response(
+            jsonify(data),
             200
         )
-        # data = Power.query.filter_by(id=id).first().to_dict()
-
-       
-        
-        # response=make_response(
-        #     jsonify(data),
-        #     200
-        # )
-        # return response
+        return response
     
     def patch(self,id):
         data=Power.query.filter_by(id=id).first()
@@ -91,6 +82,8 @@ class PowerById(Resource):
         return response
     
 api.add_resource(PowerById, '/powers/<int:id>')  
+
+
 class NewHeroPower(Resource):
     def get(self):
         data=[one.to_dict() for one in HeroPower.query.all()]
