@@ -66,20 +66,25 @@ class PowerById(Resource):
         )
         return response
     
-    def patch(self,id):
-        data=Power.query.filter_by(id=id).first()
-        
-        for attr in request.form:
-            setattr(data,attr,request.form[attr])
-        db.session.add(data)    
-        db.session.commit()
+    def patch(self, id):
+        power = Power.query.filter_by(id=id).first()
+        if not power:
+            return make_response(jsonify({"error": "Power not found"}), 404)
 
-        response_dict=data.to_dict()
-        response=make_response(
-            response_dict,
-            200
-        )
-        return response
+    # Update the power description if provided in the request
+        if 'description' in request.json:
+            power.description = request.json['description']
+
+            
+            db.session.commit()
+            return make_response(jsonify({
+            "id": power.id,
+            "name": power.name,
+            "description": power.description
+            }), 200)
+        
+        else:
+            return make_response(jsonify({"errors": ["Description not provided"]}), 400)
     
 api.add_resource(PowerById, '/powers/<int:id>')  
 
@@ -122,4 +127,4 @@ api.add_resource(NewHeroPower, '/hero_powers')
 
  
 if __name__ == '__main__':
-    app.run(port=5555)
+    app.run(port=5555,debug=True)
